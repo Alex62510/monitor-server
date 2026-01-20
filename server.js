@@ -1,5 +1,6 @@
-import WebSocket, { WebSocketServer } from "ws";
+import {WebSocketServer} from "ws";
 import os from "os";
+import checkDiskSpace from "check-disk-space";
 
 const PORT = process.env.PORT || 3003;
 
@@ -8,7 +9,7 @@ const wss = new WebSocketServer({ port: PORT }, () => {
     console.log(`WebSocket server started on port ${PORT}`);
 });
 
-function getMetrics() {
+async function getMetrics() {
     const cpus = os.cpus();
     const cpuUsage =
         cpus.reduce((acc, cpu) => {
@@ -21,9 +22,15 @@ function getMetrics() {
     const freeMem = os.freemem();
     const memoryUsage = 1 - freeMem / totalMem;
 
+    const diskPath = process.platform === "win32" ? "C:" : "/";
+    const disk = await checkDiskSpace(diskPath);
+    const diskUsed = disk.size - disk.free;
+    const diskUsage = diskUsed / disk.size;
+
     return {
         cpuUsage: Number((cpuUsage * 100).toFixed(2)),
         memoryUsage: Number((memoryUsage * 100).toFixed(2)),
+        diskUsage: Number((diskUsage * 100).toFixed(2)),
         timestamp: Date.now(),
     };
 }

@@ -12,7 +12,6 @@
     "type": "git",
     "url": "git+https://github.com/Alex62510/monitor-server.git"
   },
-
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -21,6 +20,7 @@
   },
   "homepage": "https://github.com/Alex62510/monitor-server#readme",
   "dependencies": {
+    "check-disk-space": "^3.4.0",
     "ws": "^8.19.0"
   },
   "devDependencies": {

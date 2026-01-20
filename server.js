@@ -38,8 +38,9 @@ async function getMetrics() {
 wss.on("connection", (ws) => {
     console.log("Client connected");
 
-    const interval = setInterval(() => {
-        ws.send(JSON.stringify(getMetrics()));
+    const interval = setInterval(async () => {
+        const metrics = await getMetrics();
+        ws.send(JSON.stringify(metrics));
     }, 1000);
 
     ws.on("close", () => clearInterval(interval));
